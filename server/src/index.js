@@ -42,6 +42,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Internal Server Error', error: err.message });
 });
 
-app.listen(PORT, () => {
-  console.log(`[YouTube Clone Server]: Listening on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`[YouTube Clone Server]: Listening on http://127.0.0.1:${PORT}`);
 });
