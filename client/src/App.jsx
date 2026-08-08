@@ -1,0 +1,99 @@
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { Header } from './components/Header';
+import { Sidebar } from './components/Sidebar';
+import { ChannelModal } from './components/ChannelModal';
+import { VideoModal } from './components/VideoModal';
+
+import { HomePage } from './pages/HomePage';
+import { LoginPage } from './pages/LoginPage';
+import { RegisterPage } from './pages/RegisterPage';
+import { WatchPage } from './pages/WatchPage';
+import { ChannelPage } from './pages/ChannelPage';
+
+function AppContent() {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isChannelModalOpen, setIsChannelModalOpen] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
+  const { user, updateUserProfile } = useAuth();
+
+  const handleOpenCreateModal = () => {
+    if (!user) {
+      alert('Please sign in first');
+      return;
+    }
+
+    if (!user.channels || user.channels.length === 0) {
+      setIsChannelModalOpen(true);
+    } else {
+      setIsVideoModalOpen(true);
+    }
+  };
+
+  const handleChannelCreated = (newChannel) => {
+    if (user) {
+      const updatedChannels = [...(user.channels || []), newChannel];
+      updateUserProfile({ channels: updatedChannels });
+    }
+  };
+
+  const firstChannelId = user?.channels?.[0]?._id || user?.channels?.[0];
+
+  return (
+    <div className="app-container">
+      <Header
+        onToggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        onOpenCreateModal={handleOpenCreateModal}
+      />
+
+      <div className="main-body">
+        <Sidebar isCollapsed={isSidebarCollapsed} />
+
+        <main
+          className="page-content"
+          style={{
+            marginLeft: isSidebarCollapsed ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)'
+          }}
+        >
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/watch/:id" element={<WatchPage />} />
+            <Route
+              path="/channel/:id"
+              element={<ChannelPage onOpenCreateChannelModal={() => setIsChannelModalOpen(true)} />}
+            />
+          </Routes>
+        </main>
+      </div>
+
+      <ChannelModal
+        isOpen={isChannelModalOpen}
+        onClose={() => setIsChannelModalOpen(false)}
+        onChannelCreated={handleChannelCreated}
+      />
+
+      <VideoModal
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+        onVideoSaved={() => {
+          window.location.reload();
+        }}
+        channelId={firstChannelId}
+      />
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </Router>
+  );
+}
