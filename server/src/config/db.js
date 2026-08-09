@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import { seedDatabaseIfEmpty } from './seedHelper.js';
 
 let mongoMemoryServer = null;
 
@@ -25,4 +26,7 @@ export const connectDB = async () => {
       process.exit(1);
     }
   }
+
+  // Ensure sample data is seeded if collection is empty
+  await seedDatabaseIfEmpty();
 };
