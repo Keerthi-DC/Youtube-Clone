@@ -29,6 +29,24 @@ const userSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Channel'
       }
+    ],
+    subscribedChannels: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Channel'
+      }
+    ],
+    watchHistory: [
+      {
+        video: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Video'
+        },
+        watchedAt: {
+          type: Date,
+          default: Date.now
+        }
+      }
     ]
   },
   {

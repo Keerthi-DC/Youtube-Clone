@@ -20,10 +20,12 @@ const channelSchema = new mongoose.Schema(
       type: String,
       default: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80'
     },
-    subscribers: {
-      type: Number,
-      default: 0
-    },
+    subscribers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    ],
     videos: [
       {
         type: mongoose.Schema.Types.ObjectId,
