@@ -20,7 +20,31 @@ const commentSchema = new mongoose.Schema(
     timestamp: {
       type: Date,
       default: Date.now
-    }
+    },
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    ],
+    replies: [
+      {
+        userId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+          required: true
+        },
+        text: {
+          type: String,
+          required: true,
+          trim: true
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ]
   },
   {
     timestamps: true
