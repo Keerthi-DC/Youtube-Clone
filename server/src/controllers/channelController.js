@@ -17,7 +17,7 @@ export const createChannel = async (req, res) => {
       description: description || '',
       channelBanner: channelBanner || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
       owner: req.user._id,
-      subscribers: 0,
+      subscribers: [],
       videos: []
     });
 
@@ -127,6 +127,42 @@ export const toggleSubscribeChannel = async (req, res) => {
   } catch (error) {
     console.error('[Toggle Subscribe Error]:', error);
     res.status(500).json({ message: 'Server error toggling subscription', error: error.message });
+  }
+};
+
+// @desc    Update channel information
+// @route   PUT /api/channels/:id
+// @access  Private (Owner only)
+export const updateChannel = async (req, res) => {
+  try {
+    const channel = await Channel.findById(req.params.id);
+    if (!channel) {
+      return res.status(404).json({ message: 'Channel not found' });
+    }
+
+    if (channel.owner.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Not authorized to edit this channel' });
+    }
+
+    const { channelName, description, channelBanner } = req.body;
+
+    if (channelName) channel.channelName = channelName.trim();
+    if (description !== undefined) channel.description = description.trim();
+    if (channelBanner) channel.channelBanner = channelBanner.trim();
+
+    await channel.save();
+
+    const updatedChannel = await Channel.findById(channel._id)
+      .populate('owner', 'username email avatar')
+      .populate({
+        path: 'videos',
+        populate: { path: 'uploader', select: 'username avatar' }
+      });
+
+    res.json(updatedChannel);
+  } catch (error) {
+    console.error('[Update Channel Error]:', error);
+    res.status(500).json({ message: 'Server error updating channel', error: error.message });
   }
 };
 
