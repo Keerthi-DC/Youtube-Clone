@@ -9,8 +9,7 @@ export const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'All');
-
+  const selectedCategory = searchParams.get('category') || 'All';
   const searchQuery = searchParams.get('search') || '';
 
   useEffect(() => {
@@ -39,7 +38,6 @@ export const HomePage = () => {
   }, [searchQuery, selectedCategory]);
 
   const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
     const newParams = new URLSearchParams(searchParams);
     if (category === 'All') {
       newParams.delete('category');

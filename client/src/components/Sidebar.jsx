@@ -1,24 +1,31 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Home, Compass, PlaySquare, Clock, ThumbsUp, Tv, Film, Radio } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export const Sidebar = ({ isCollapsed }) => {
   const { user } = useAuth();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const currentCategory = searchParams.get('category');
   const firstChannelId = user?.channels?.[0]?._id || user?.channels?.[0];
+
+  const isHomeActive = location.pathname === '/' && !currentCategory;
+  const isExploreActive = location.pathname === '/explore';
+  const isCategoryActive = (cat) => location.pathname === '/' && currentCategory === cat;
 
   return (
     <aside className={`yt-sidebar ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-section">
-        <NavLink to="/" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}>
+        <Link to="/" className={`sidebar-item ${isHomeActive ? 'active' : ''}`}>
           <Home size={20} />
           <span>Home</span>
-        </NavLink>
+        </Link>
 
-        <NavLink to="/?category=Coding" className="sidebar-item">
+        <Link to="/explore" className={`sidebar-item ${isExploreActive ? 'active' : ''}`}>
           <Compass size={20} />
           <span>Explore</span>
-        </NavLink>
+        </Link>
 
         <div className="sidebar-item" onClick={() => alert('Subscriptions feature demo')}>
           <PlaySquare size={20} />
@@ -55,20 +62,22 @@ export const Sidebar = ({ isCollapsed }) => {
       {!isCollapsed && (
         <div className="sidebar-section">
           <div className="sidebar-title">Categories</div>
-          <NavLink to="/?category=React" className="sidebar-item">
+          <Link to="/?category=React" className={`sidebar-item ${isCategoryActive('React') ? 'active' : ''}`}>
             <Radio size={20} />
             <span>React Tutorials</span>
-          </NavLink>
-          <NavLink to="/?category=Coding" className="sidebar-item">
+          </Link>
+          <Link to="/?category=Coding" className={`sidebar-item ${isCategoryActive('Coding') ? 'active' : ''}`}>
             <Film size={20} />
             <span>Coding</span>
-          </NavLink>
-          <NavLink to="/?category=Music" className="sidebar-item">
+          </Link>
+          <Link to="/?category=Music" className={`sidebar-item ${isCategoryActive('Music') ? 'active' : ''}`}>
             <Radio size={20} />
             <span>Music Streams</span>
-          </NavLink>
+          </Link>
         </div>
       )}
     </aside>
   );
 };
+
+
