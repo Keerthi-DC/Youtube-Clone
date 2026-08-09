@@ -69,3 +69,64 @@ export const getMyChannels = async (req, res) => {
     res.status(500).json({ message: 'Server error fetching user channels', error: error.message });
   }
 };
+
+// @desc    Toggle channel subscription state
+// @route   POST /api/channels/:id/subscribe
+// @access  Private
+export const toggleSubscribeChannel = async (req, res) => {
+  try {
+    const channelId = req.params.id;
+    const userId = req.user._id;
+
+    const channel = await Channel.findById(channelId);
+    if (!channel) {
+      return res.status(404).json({ message: 'Channel not found' });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Ensure subscribers array exists
+    if (!Array.isArray(channel.subscribers)) {
+      channel.subscribers = [];
+    }
+
+    // Ensure user's subscribedChannels array exists
+    if (!Array.isArray(user.subscribedChannels)) {
+      user.subscribedChannels = [];
+    }
+
+    const isSubscribed = channel.subscribers.some(
+      (subId) => subId.toString() === userId.toString()
+    );
+
+    if (isSubscribed) {
+      // Unsubscribe
+      channel.subscribers = channel.subscribers.filter(
+        (subId) => subId.toString() !== userId.toString()
+      );
+      user.subscribedChannels = user.subscribedChannels.filter(
+        (chId) => chId.toString() !== channelId.toString()
+      );
+    } else {
+      // Subscribe
+      channel.subscribers.push(userId);
+      user.subscribedChannels.push(channelId);
+    }
+
+    await channel.save();
+    await user.save();
+
+    res.json({
+      isSubscribed: !isSubscribed,
+      subscribersCount: channel.subscribers.length,
+      message: isSubscribed ? 'Unsubscribed successfully' : 'Subscribed successfully'
+    });
+  } catch (error) {
+    console.error('[Toggle Subscribe Error]:', error);
+    res.status(500).json({ message: 'Server error toggling subscription', error: error.message });
+  }
+};
+
