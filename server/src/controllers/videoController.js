@@ -238,3 +238,44 @@ export const toggleDislikeVideo = async (req, res) => {
     res.status(500).json({ message: 'Server error toggling dislike', error: error.message });
   }
 };
+
+// @desc    Get videos from channels the logged-in user is subscribed to
+// @route   GET /api/videos/subscriptions
+// @access  Private
+export const getSubscriptionsFeed = async (req, res) => {
+  try {
+    const User = (await import('../models/User.js')).default;
+    const user = await User.findById(req.user._id);
+
+    if (!user || !user.subscribedChannels || user.subscribedChannels.length === 0) {
+      return res.json([]);
+    }
+
+    const videos = await Video.find({ channelId: { $in: user.subscribedChannels } })
+      .populate('channelId', 'channelName channelBanner subscribers')
+      .populate('uploader', 'username avatar')
+      .sort({ uploadDate: -1 });
+
+    res.json(videos);
+  } catch (error) {
+    console.error('[Get Subscriptions Feed Error]:', error);
+    res.status(500).json({ message: 'Server error fetching subscriptions feed', error: error.message });
+  }
+};
+
+// @desc    Get all videos liked by logged-in user
+// @route   GET /api/videos/liked
+// @access  Private
+export const getLikedVideos = async (req, res) => {
+  try {
+    const videos = await Video.find({ likes: req.user._id })
+      .populate('channelId', 'channelName channelBanner subscribers')
+      .populate('uploader', 'username avatar')
+      .sort({ uploadDate: -1 });
+
+    res.json(videos);
+  } catch (error) {
+    console.error('[Get Liked Videos Error]:', error);
+    res.status(500).json({ message: 'Server error fetching liked videos', error: error.message });
+  }
+};
