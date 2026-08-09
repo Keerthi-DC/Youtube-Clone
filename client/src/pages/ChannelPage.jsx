@@ -15,18 +15,28 @@ export const ChannelPage = ({ onOpenCreateChannelModal }) => {
   const { id } = useParams();
   const { user } = useAuth();
 
-  const [channel, setChannel] = useState(null);
-  const [videos, setVideos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-  const [editingVideo, setEditingVideo] = useState(null);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [subscribersCount, setSubscribersCount] = useState(0);
 
   const fetchChannel = async () => {
     try {
       setLoading(true);
       const res = await axios.get(`/api/channels/${id}`);
-      setChannel(res.data);
-      setVideos(res.data.videos || []);
+      const chData = res.data;
+      setChannel(chData);
+      setVideos(chData.videos || []);
+
+      const subList = Array.isArray(chData.subscribers)
+        ? chData.subscribers
+        : typeof chData.subscribers === 'number'
+        ? []
+        : [];
+      setSubscribersCount(subList.length || (typeof chData.subscribers === 'number' ? chData.subscribers : 0));
+
+      if (user && chData._id) {
+        const userSubs = user.subscribedChannels || [];
+        setIsSubscribed(userSubs.some((subId) => (subId._id || subId).toString() === chData._id.toString()));
+      }
     } catch (err) {
       console.error('[Fetch Channel Error]:', err);
     } finally {
@@ -36,10 +46,28 @@ export const ChannelPage = ({ onOpenCreateChannelModal }) => {
 
   useEffect(() => {
     fetchChannel();
-  }, [id]);
+  }, [id, user]);
 
   const owner = channel?.owner || {};
   const isOwner = user && (owner._id === user._id || owner === user._id);
+
+  const handleToggleSubscribe = async () => {
+    if (!user) return alert('Please sign in to subscribe');
+    if (!channel?._id) return;
+
+    try {
+      const token = localStorage.getItem('yt_token');
+      const res = await axios.post(
+        `/api/channels/${channel._id}/subscribe`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setIsSubscribed(res.data.isSubscribed);
+      setSubscribersCount(res.data.subscribersCount);
+    } catch (err) {
+      console.error('[Subscribe Error]:', err);
+    }
+  };
 
   const handleVideoSaved = (savedVideo) => {
     if (editingVideo) {
@@ -108,7 +136,7 @@ export const ChannelPage = ({ onOpenCreateChannelModal }) => {
           <div>
             <h1 style={{ fontSize: '1.8rem', fontWeight: 700 }}>{channel.channelName}</h1>
             <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
-              @{owner.username || 'user'} • {formatViews(channel.subscribers)} subscribers • {videos.length} videos
+              @{owner.username || 'user'} • {formatViews(subscribersCount)} subscribers • {videos.length} videos
             </div>
             <p style={{ color: 'var(--text-primary)', fontSize: '0.9rem', marginTop: '8px' }}>
               {channel.description || 'Welcome to my official YouTube channel!'}
@@ -127,7 +155,12 @@ export const ChannelPage = ({ onOpenCreateChannelModal }) => {
             <Plus size={18} /> Upload Video
           </button>
         ) : (
-          <button className="btn-primary">Subscribe</button>
+          <button
+            className={isSubscribed ? 'btn-secondary' : 'btn-primary'}
+            onClick={handleToggleSubscribe}
+          >
+            {isSubscribed ? 'Subscribed' : 'Subscribe'}
+          </button>
         )}
       </div>
 
