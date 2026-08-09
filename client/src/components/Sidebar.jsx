@@ -12,6 +12,9 @@ export const Sidebar = ({ isCollapsed }) => {
 
   const isHomeActive = location.pathname === '/' && !currentCategory;
   const isExploreActive = location.pathname === '/explore';
+  const isSubscriptionsActive = location.pathname === '/subscriptions';
+  const isHistoryActive = location.pathname === '/history';
+  const isLikedActive = location.pathname === '/liked';
   const isCategoryActive = (cat) => location.pathname === '/' && currentCategory === cat;
 
   return (
@@ -27,24 +30,24 @@ export const Sidebar = ({ isCollapsed }) => {
           <span>Explore</span>
         </Link>
 
-        <div className="sidebar-item" onClick={() => alert('Subscriptions feature demo')}>
+        <Link to="/subscriptions" className={`sidebar-item ${isSubscriptionsActive ? 'active' : ''}`}>
           <PlaySquare size={20} />
           <span>Subscriptions</span>
-        </div>
+        </Link>
       </div>
 
       <div className="sidebar-section">
         {!isCollapsed && <div className="sidebar-title">You</div>}
 
-        <div className="sidebar-item" onClick={() => alert('Library feature demo')}>
+        <Link to="/history" className={`sidebar-item ${isHistoryActive ? 'active' : ''}`}>
           <Film size={20} />
           <span>Library</span>
-        </div>
+        </Link>
 
-        <div className="sidebar-item" onClick={() => alert('History feature demo')}>
+        <Link to="/history" className={`sidebar-item ${isHistoryActive ? 'active' : ''}`}>
           <Clock size={20} />
           <span>History</span>
-        </div>
+        </Link>
 
         {firstChannelId && (
           <NavLink to={`/channel/${firstChannelId}`} className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}>
@@ -53,10 +56,10 @@ export const Sidebar = ({ isCollapsed }) => {
           </NavLink>
         )}
 
-        <div className="sidebar-item" onClick={() => alert('Liked videos page')}>
+        <Link to="/liked" className={`sidebar-item ${isLikedActive ? 'active' : ''}`}>
           <ThumbsUp size={20} />
           <span>Liked Videos</span>
-        </div>
+        </Link>
       </div>
 
       {!isCollapsed && (

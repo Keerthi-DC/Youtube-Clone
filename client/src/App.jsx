@@ -8,6 +8,9 @@ import { VideoModal } from './components/VideoModal';
 
 import { HomePage } from './pages/HomePage';
 import { ExplorePage } from './pages/ExplorePage';
+import { SubscriptionsPage } from './pages/SubscriptionsPage';
+import { HistoryPage } from './pages/HistoryPage';
+import { LikedVideosPage } from './pages/LikedVideosPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { WatchPage } from './pages/WatchPage';
@@ -61,6 +64,9 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/subscriptions" element={<SubscriptionsPage />} />
+            <Route path="/history" element={<HistoryPage />} />
+            <Route path="/liked" element={<LikedVideosPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/watch/:id" element={<WatchPage />} />

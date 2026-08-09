@@ -26,6 +26,7 @@ export const WatchPage = () => {
   const [isDisliked, setIsDisliked] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [subscribersCount, setSubscribersCount] = useState(0);
 
   useEffect(() => {
     const fetchVideoDetails = async () => {
@@ -45,11 +46,28 @@ export const WatchPage = () => {
         setLikesCount(v.likes ? v.likes.length : 0);
         setDislikesCount(v.dislikes ? v.dislikes.length : 0);
 
+        const channelObj = v.channelId || {};
+        const subList = Array.isArray(channelObj.subscribers)
+          ? channelObj.subscribers
+          : typeof channelObj.subscribers === 'number'
+          ? []
+          : [];
+        setSubscribersCount(subList.length || (typeof channelObj.subscribers === 'number' ? channelObj.subscribers : 0));
+
         if (user && v.likes) {
           setIsLiked(v.likes.some((uId) => (uId._id || uId) === user._id));
         }
         if (user && v.dislikes) {
           setIsDisliked(v.dislikes.some((uId) => (uId._id || uId) === user._id));
+        }
+        if (user && channelObj._id) {
+          const userSubs = user.subscribedChannels || [];
+          setIsSubscribed(userSubs.some((chId) => (chId._id || chId).toString() === channelObj._id.toString()));
+          // Log watch history
+          const token = localStorage.getItem('yt_token');
+          axios.post(`/api/users/history/${id}`, {}, {
+            headers: { Authorization: `Bearer ${token}` }
+          }).catch((err) => console.error('[Log History Error]:', err));
         }
       } catch (err) {
         console.error('[WatchPage Fetch Error]:', err);
@@ -60,6 +78,25 @@ export const WatchPage = () => {
 
     fetchVideoDetails();
   }, [id, user]);
+
+  const handleToggleSubscribe = async () => {
+    if (!user) return alert('Please sign in to subscribe');
+    const channelObj = video?.channelId || {};
+    if (!channelObj._id) return;
+
+    try {
+      const token = localStorage.getItem('yt_token');
+      const res = await axios.post(
+        `/api/channels/${channelObj._id}/subscribe`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setIsSubscribed(res.data.isSubscribed);
+      setSubscribersCount(res.data.subscribersCount);
+    } catch (err) {
+      console.error('[Subscribe Error]:', err);
+    }
+  };
 
   const handleToggleLike = async () => {
     if (!user) return alert('Please sign in to like videos');
@@ -166,13 +203,13 @@ export const WatchPage = () => {
                 {channel.channelName || uploader.username || 'Channel Name'}
               </Link>
               <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                {formatViews(channel.subscribers || 5200)} subscribers
+                {formatViews(subscribersCount)} subscribers
               </div>
             </div>
             <button
               className={isSubscribed ? 'btn-secondary' : 'btn-primary'}
               style={{ marginLeft: '12px' }}
-              onClick={() => setIsSubscribed(!isSubscribed)}
+              onClick={handleToggleSubscribe}
             >
               {isSubscribed ? 'Subscribed' : 'Subscribe'}
             </button>
