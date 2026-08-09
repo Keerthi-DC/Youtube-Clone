@@ -119,7 +119,7 @@ const seedData = async () => {
       owner: john._id,
       description: 'Coding tutorials and tech reviews by John Doe.',
       channelBanner: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
-      subscribers: 5200,
+      subscribers: [alex._id, sara._id],
       videos: []
     });
 
@@ -128,16 +128,21 @@ const seedData = async () => {
       owner: sara._id,
       description: 'Master React, Tailwind, and Modern Web Design.',
       channelBanner: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80',
-      subscribers: 12400,
+      subscribers: [alex._id, john._id],
       videos: []
     });
 
     // Link channels to users
     john.channels.push(channel1._id);
+    john.subscribedChannels.push(channel2._id);
     await john.save();
 
     sara.channels.push(channel2._id);
+    sara.subscribedChannels.push(channel1._id);
     await sara.save();
+
+    alex.subscribedChannels.push(channel1._id, channel2._id);
+    await alex.save();
 
     console.log('[Seeding]: Creating sample videos...');
     const createdVideos = [];
