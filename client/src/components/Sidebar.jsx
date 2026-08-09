@@ -13,6 +13,7 @@ export const Sidebar = ({ isCollapsed }) => {
   const isHomeActive = location.pathname === '/' && !currentCategory;
   const isExploreActive = location.pathname === '/explore';
   const isSubscriptionsActive = location.pathname === '/subscriptions';
+  const isLibraryActive = location.pathname === '/library';
   const isHistoryActive = location.pathname === '/history';
   const isLikedActive = location.pathname === '/liked';
   const isCategoryActive = (cat) => location.pathname === '/' && currentCategory === cat;
@@ -39,7 +40,7 @@ export const Sidebar = ({ isCollapsed }) => {
       <div className="sidebar-section">
         {!isCollapsed && <div className="sidebar-title">You</div>}
 
-        <Link to="/history" className={`sidebar-item ${isHistoryActive ? 'active' : ''}`}>
+        <Link to="/library" className={`sidebar-item ${isLibraryActive ? 'active' : ''}`}>
           <Film size={20} />
           <span>Library</span>
         </Link>
