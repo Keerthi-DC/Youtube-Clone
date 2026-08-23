@@ -5,6 +5,7 @@ import { ThumbsUp, ThumbsDown, Share2, Download, MessageSquare, Send } from 'luc
 import { useAuth } from '../context/AuthContext';
 import { CommentItem } from '../components/CommentItem';
 import { VideoCard } from '../components/VideoCard';
+import { ShareModal } from '../components/ShareModal';
 
 const formatViews = (views = 0) => {
   if (views >= 1000000) return `${(views / 1000000).toFixed(1)}M`;
@@ -27,6 +28,7 @@ export const WatchPage = () => {
   const [loading, setLoading] = useState(true);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribersCount, setSubscribersCount] = useState(0);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchVideoDetails = async () => {
@@ -228,7 +230,7 @@ export const WatchPage = () => {
               </button>
             </div>
 
-            <button className="btn-secondary" style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+            <button className="btn-secondary" style={{ display: 'flex', gap: '6px', alignItems: 'center' }} onClick={() => setIsShareModalOpen(true)}>
               <Share2 size={18} /> Share
             </button>
             <button className="btn-secondary" style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
@@ -305,6 +307,12 @@ export const WatchPage = () => {
           <VideoCard key={rec._id} video={rec} />
         ))}
       </div>
+
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        videoTitle={video.title}
+      />
     </div>
   );
 };

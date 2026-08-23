@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Plus, Edit3, Trash2, Video as VideoIcon } from 'lucide-react';
+import { Plus, Edit3, Trash2, Video as VideoIcon, Settings } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { VideoModal } from '../components/VideoModal';
+import { ChannelEditModal } from '../components/ChannelEditModal';
 
 const formatViews = (views = 0) => {
   if (views >= 1000000) return `${(views / 1000000).toFixed(1)}M`;
@@ -15,8 +16,14 @@ export const ChannelPage = ({ onOpenCreateChannelModal }) => {
   const { id } = useParams();
   const { user } = useAuth();
 
+  const [channel, setChannel] = useState(null);
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribersCount, setSubscribersCount] = useState(0);
+  const [isEditChannelModalOpen, setIsEditChannelModalOpen] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [editingVideo, setEditingVideo] = useState(null);
 
   const fetchChannel = async () => {
     try {
@@ -145,15 +152,24 @@ export const ChannelPage = ({ onOpenCreateChannelModal }) => {
         </div>
 
         {isOwner ? (
-          <button
-            className="btn-primary"
-            onClick={() => {
-              setEditingVideo(null);
-              setIsVideoModalOpen(true);
-            }}
-          >
-            <Plus size={18} /> Upload Video
-          </button>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button
+              className="btn-secondary"
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+              onClick={() => setIsEditChannelModalOpen(true)}
+            >
+              <Settings size={18} /> Customize Channel
+            </button>
+            <button
+              className="btn-primary"
+              onClick={() => {
+                setEditingVideo(null);
+                setIsVideoModalOpen(true);
+              }}
+            >
+              <Plus size={18} /> Upload Video
+            </button>
+          </div>
         ) : (
           <button
             className={isSubscribed ? 'btn-secondary' : 'btn-primary'}
@@ -245,6 +261,14 @@ export const ChannelPage = ({ onOpenCreateChannelModal }) => {
         onVideoSaved={handleVideoSaved}
         initialData={editingVideo}
         channelId={channel._id}
+      />
+
+      {/* Channel Settings Customization Modal */}
+      <ChannelEditModal
+        isOpen={isEditChannelModalOpen}
+        onClose={() => setIsEditChannelModalOpen(false)}
+        channel={channel}
+        onChannelUpdated={(updatedChannel) => setChannel(updatedChannel)}
       />
     </div>
   );
