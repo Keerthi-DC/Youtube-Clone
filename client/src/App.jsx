@@ -19,10 +19,19 @@ import { ChannelPage } from './pages/ChannelPage';
 
 function AppContent() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isChannelModalOpen, setIsChannelModalOpen] = useState(false);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   const { user, updateUserProfile } = useAuth();
+
+  const handleToggleSidebar = () => {
+    if (window.innerWidth <= 768) {
+      setIsMobileSidebarOpen(!isMobileSidebarOpen);
+    } else {
+      setIsSidebarCollapsed(!isSidebarCollapsed);
+    }
+  };
 
   const handleOpenCreateModal = () => {
     if (!user) {
@@ -49,19 +58,18 @@ function AppContent() {
   return (
     <div className="app-container">
       <Header
-        onToggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        onToggleSidebar={handleToggleSidebar}
         onOpenCreateModal={handleOpenCreateModal}
       />
 
       <div className="main-body">
-        <Sidebar isCollapsed={isSidebarCollapsed} />
+        <Sidebar
+          isCollapsed={isSidebarCollapsed}
+          isMobileOpen={isMobileSidebarOpen}
+          onCloseMobile={() => setIsMobileSidebarOpen(false)}
+        />
 
-        <main
-          className="page-content"
-          style={{
-            marginLeft: isSidebarCollapsed ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)'
-          }}
-        >
+        <main className={`page-content ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/explore" element={<ExplorePage />} />
