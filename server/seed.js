@@ -33,7 +33,7 @@ const sampleVideos = [
   {
     title: 'Learn React in 30 Minutes - Complete Beginner Tutorial',
     thumbnailUrl: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    videoUrl: 'https://www.youtube.com/watch?v=SqcY0GlETPk',
     description: 'A comprehensive quick tutorial to get started with React 19, hooks, component state, props, and modern frontend development.',
     category: 'React',
     views: 15200,
@@ -43,7 +43,7 @@ const sampleVideos = [
   {
     title: 'Build a Full-Stack MERN Application from Scratch',
     thumbnailUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+    videoUrl: 'https://www.youtube.com/watch?v=7CqJlxBYj-M',
     description: 'Learn how to connect MongoDB, Express.js, React, and Node.js with JWT authentication and RESTful APIs.',
     category: 'Coding',
     views: 48900,
@@ -53,7 +53,7 @@ const sampleVideos = [
   {
     title: 'Top 10 JavaScript Best Practices for 2026',
     thumbnailUrl: 'https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?auto=format&fit=crop&w=800&q=80',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    videoUrl: 'https://media.w3.org/2010/05/sintel/trailer_hd.mp4',
     description: 'Clean code guidelines, async/await patterns, ES modules, performance optimizations, and debugging tips.',
     category: 'Coding',
     views: 23100,
@@ -63,7 +63,7 @@ const sampleVideos = [
   {
     title: 'Relaxing Lo-Fi Beats for Coding and Studying',
     thumbnailUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
     description: 'Chill aesthetic lo-fi music stream for deep work sessions and late night programming.',
     category: 'Music',
     views: 94200,
@@ -73,7 +73,7 @@ const sampleVideos = [
   {
     title: 'Next-Gen Game Engine Showcase & Real-Time Graphics',
     thumbnailUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+    videoUrl: 'https://www.youtube.com/watch?v=Ke90Tje7VS0',
     description: 'Exploring photorealistic rendering, ray tracing, physics engines, and AAA game mechanics.',
     category: 'Gaming',
     views: 61500,
@@ -83,7 +83,7 @@ const sampleVideos = [
   {
     title: 'Tech News Daily: AI Advances and Cloud Computing',
     thumbnailUrl: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoylikes.mp4',
+    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
     description: 'The latest updates in software engineering, artificial intelligence, microservices, and web dev.',
     category: 'Tech',
     views: 31800,

@@ -13,6 +13,29 @@ const formatViews = (views = 0) => {
   return views.toString();
 };
 
+const getVideoEmbedConfig = (url) => {
+  if (!url) return { isIframe: false, url: '' };
+
+  const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+  const match = url.match(ytRegex);
+
+  if (match && match[1]) {
+    return {
+      isIframe: true,
+      url: `https://www.youtube.com/embed/${match[1]}?autoplay=1&rel=0`
+    };
+  }
+
+  if (url.includes('youtube.com/embed/')) {
+    return {
+      isIframe: true,
+      url: url.includes('autoplay=') ? url : `${url}?autoplay=1`
+    };
+  }
+
+  return { isIframe: false, url };
+};
+
 export const WatchPage = () => {
   const { id } = useParams();
   const { user } = useAuth();
@@ -29,11 +52,13 @@ export const WatchPage = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribersCount, setSubscribersCount] = useState(0);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
     const fetchVideoDetails = async () => {
       try {
         setLoading(true);
+        setVideoError(false);
         const [videoRes, commentsRes, allVideosRes] = await Promise.all([
           axios.get(`/api/videos/${id}`),
           axios.get(`/api/comments/video/${id}`),
@@ -171,21 +196,47 @@ export const WatchPage = () => {
 
   const channel = video.channelId || {};
   const uploader = video.uploader || {};
+  const embedConfig = getVideoEmbedConfig(video.videoUrl);
 
   return (
     <div className="watch-container">
       <div className="player-section">
         {/* Video Player */}
         <div className="video-player-frame">
-          <video
-            src={video.videoUrl}
-            poster={video.thumbnailUrl}
-            controls
-            autoPlay
-            style={{ width: '100%', height: '100%' }}
-          >
-            Your browser does not support video playback.
-          </video>
+          {embedConfig.isIframe ? (
+            <iframe
+              src={embedConfig.url}
+              title={video.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              style={{ width: '100%', height: '100%', border: 0 }}
+            />
+          ) : videoError ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', background: '#111', color: '#fff', padding: '20px', textAlign: 'center' }}>
+              <p style={{ fontSize: '1.1rem', marginBottom: '8px' }}>⚠️ Video stream playback error</p>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>Unable to stream media directly in browser player: {video.videoUrl}</p>
+              <a
+                href={video.videoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+                style={{ fontSize: '0.85rem', textDecoration: 'none' }}
+              >
+                Open Media URL directly
+              </a>
+            </div>
+          ) : (
+            <video
+              src={video.videoUrl}
+              poster={video.thumbnailUrl}
+              controls
+              autoPlay
+              onError={() => setVideoError(true)}
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            >
+              Your browser does not support video playback.
+            </video>
+          )}
         </div>
 
         {/* Video Title & Actions */}
