@@ -1,6 +1,13 @@
 import mongoose from 'mongoose';
+import dns from 'node:dns';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { seedDatabaseIfEmpty } from './seedHelper.js';
+
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (e) {
+  // Fallback if custom DNS cannot be set
+}
 
 let mongoMemoryServer = null;
 
@@ -8,9 +15,9 @@ export const connectDB = async () => {
   const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/youtube_clone';
   
   try {
-    // Attempt local or environment MongoDB connection with a 4s timeout
+    // Attempt local or environment MongoDB connection with a 15s timeout
     await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 2000
+      serverSelectionTimeoutMS: 15000
     });
     console.log(`[MongoDB Connected]: ${mongoose.connection.host}`);
   } catch (error) {

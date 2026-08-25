@@ -1,10 +1,17 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import dns from 'node:dns';
 import { connectDB } from './src/config/db.js';
 import User from './src/models/User.js';
 import Channel from './src/models/Channel.js';
 import Video from './src/models/Video.js';
 import Comment from './src/models/Comment.js';
+
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (e) {
+  // Fallback if custom DNS cannot be set
+}
 
 dotenv.config();
 
