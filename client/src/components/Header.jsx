@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 export const Header = ({ onToggleSidebar, onSearchSubmit, initialSearch = '', onOpenCreateModal }) => {
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [showDropdown, setShowDropdown] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
@@ -56,7 +56,9 @@ export const Header = ({ onToggleSidebar, onSearchSubmit, initialSearch = '', on
       </div>
 
       <div className="header-right">
-        {user ? (
+        {loading ? (
+          <div style={{ width: '80px', height: '32px' }} />
+        ) : user ? (
           <>
             {onOpenCreateModal && (
               <button className="btn-primary" onClick={onOpenCreateModal} style={{ fontSize: '0.85rem' }}>
