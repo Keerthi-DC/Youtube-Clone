@@ -1,0 +1,155 @@
+[
+  {
+    "testName": "Health Check API",
+    "endpoint": "/api/health",
+    "method": "GET",
+    "status": 200,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:30.444Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "Fetch All Videos",
+    "endpoint": "/api/videos",
+    "method": "GET",
+    "status": 200,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:30.665Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "Search Videos by Title",
+    "endpoint": "/api/videos?search=React",
+    "method": "GET",
+    "status": 200,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:30.885Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "Filter Videos by Category",
+    "endpoint": "/api/videos?category=Coding",
+    "method": "GET",
+    "status": 200,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:31.030Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "User Registration",
+    "endpoint": "/api/auth/register",
+    "method": "POST",
+    "status": 201,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:32.318Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "User Login & JWT Issue",
+    "endpoint": "/api/auth/login",
+    "method": "POST",
+    "status": 200,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:32.589Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "Fetch Auth User Profile",
+    "endpoint": "/api/auth/me",
+    "method": "GET",
+    "status": 200,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:32.831Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "Create Channel",
+    "endpoint": "/api/channels",
+    "method": "POST",
+    "status": 201,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:33.134Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "Upload Video",
+    "endpoint": "/api/videos",
+    "method": "POST",
+    "status": 201,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:33.719Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "Fetch Video by ID",
+    "endpoint": "/api/videos/6a8d3d19496c5a217b3f1fc4",
+    "method": "GET",
+    "status": 200,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:33.922Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "Toggle Like Video",
+    "endpoint": "/api/videos/6a8d3d19496c5a217b3f1fc4/like",
+    "method": "POST",
+    "status": 200,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:34.157Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "Toggle Dislike Video",
+    "endpoint": "/api/videos/6a8d3d19496c5a217b3f1fc4/dislike",
+    "method": "POST",
+    "status": 200,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:34.465Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "Add Comment",
+    "endpoint": "/api/comments",
+    "method": "POST",
+    "status": 201,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:34.978Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "Fetch Video Comments",
+    "endpoint": "/api/comments/video/6a8d3d19496c5a217b3f1fc4",
+    "method": "GET",
+    "status": 200,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:35.181Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "Update Comment",
+    "endpoint": "/api/comments/6a8d3d1a496c5a217b3f1fd5",
+    "method": "PUT",
+    "status": 200,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:35.695Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "Delete Comment",
+    "endpoint": "/api/comments/6a8d3d1a496c5a217b3f1fd5",
+    "method": "DELETE",
+    "status": 200,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:36.001Z",
+    "errorDetails": ""
+  },
+  {
+    "testName": "Delete Video",
+    "endpoint": "/api/videos/6a8d3d19496c5a217b3f1fc4",
+    "method": "DELETE",
+    "status": 200,
+    "success": true,
+    "timestamp": "2026-08-25T06:58:36.410Z",
+    "errorDetails": ""
+  }
+]

@@ -9,13 +9,39 @@ import channelRoutes from './routes/channelRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const logDir = path.join(__dirname, '../logs');
+
+if (!fs.existsSync(logDir)) {
+  fs.mkdirSync(logDir, { recursive: true });
+}
+
+const logFilePath = path.join(logDir, 'app.log');
+const logStream = fs.createWriteStream(logFilePath, { flags: 'a' });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Connect Database
 connectDB();
+
+// File Logger Middleware
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    const logLine = `[${new Date().toISOString()}] ${req.method} ${req.originalUrl} - ${res.statusCode} (${duration}ms)\n`;
+    logStream.write(logLine);
+  });
+  next();
+});
 
 // Middleware
 app.use(cors());
